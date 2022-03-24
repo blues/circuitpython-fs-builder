@@ -7,23 +7,32 @@ suitable for flashing to the filesystem storage area of a device running Circuit
 import argparse
 import fs
 import os
+from pyfatfs import PyFat
 
 
 def trim_file(filename: str, trim_value: int, verbose: bool):
-    with open(filename, "rb") as read_file:
+    with open(filename, "rb+") as read_file:
         contents = bytearray(read_file.read())
 
-    original_size = len(contents)
-    size = original_size
-    while size > 0 and contents[size - 1] == trim_value:
-        size -= 1
+        original_size = len(contents)
+        size = original_size
+        while size > 0 and contents[size - 1] == trim_value:
+            size -= 1
 
-    if size != original_size:
-        if verbose:
-            print(f"Truncating file {filename} from {original_size} to {size} bytes")
+        if size != original_size:
+            if verbose:
+                print(f"Truncating file {filename} from {original_size} to {size} bytes")
+            read_file.truncate(size)
 
-        with open(filename, "wb") as write_file:
-            write_file.truncate(size)
+
+def mkfs(filename: str):
+    fat = PyFat.PyFat()
+    fat.mkfs(filename, fat_type=PyFat.PyFat.FAT_TYPE_FAT12, label="CIRCUITPY  ")
+    fat.close()
+
+
+def remove_all(output_fs):
+    output_fs.removetree("/")
 
 
 def build_fatfs(seed_file: str, input_path: str, output_file: str, verbose: bool):
@@ -35,24 +44,32 @@ def build_fatfs(seed_file: str, input_path: str, output_file: str, verbose: bool
     """
     current_script = os.path.realpath(__file__)
     script_dir = os.path.dirname(current_script)
-    seed_file_abs = os.path.join(script_dir, seed_file)
     output_file_abs = os.path.realpath(output_file)
+    seed_file_abs = os.path.join(script_dir, seed_file)
 
     # open_fs defines the root of the filesystem. In order to allow the files to be in arbitrary locations, we
     # must use absolute paths and open from the root
     with fs.open_fs("/") as seed:
         seed.copy(seed_file_abs, output_file_abs, True)
 
-    # open the input filesystem
+    # open the input and output filesystems
     with fs.open_fs(input_path) as input_fs:
         with fs.open_fs("fat://" + output_file_abs, writeable=True, create=True) as output_fs:
-            fs.copy.copy_fs(input_fs, output_fs)
+            remove_all(output_fs)
+            fs.copy.copy_fs(input_fs, output_fs, preserve_time=True)
 
     trim_file(output_file_abs, 0xFF, verbose)
 
-    # The original fat filesystem includes .metadata_never_index, .Trashes and .fseventssd/no_log files
-    # presumably to prevent the OS from wasting space on the removable drive
-    # verify_fs(output_file_abs, input_path)
+    if verbose:
+        show_tree(output_file_abs)
+
+    verify_fs(output_file_abs, input_path)
+
+
+def show_tree(fat_fs: str):
+    fat_fs_abs = os.path.realpath(fat_fs)
+    with fs.open_fs("fat://" + fat_fs_abs) as fat_fs:
+        fat_fs.tree()
 
 
 def verify_fs(fat_fs_abs: str, local_path: str):
