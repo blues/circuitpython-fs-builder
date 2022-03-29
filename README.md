@@ -41,3 +41,9 @@ For more details
 ```shell
 python3 main.py -h
 ```
+
+
+## License
+
+Copyright (c) 2022 Blues, Inc. Released under the MIT license. See
+[LICENSE](LICENSE.mit) for details.
