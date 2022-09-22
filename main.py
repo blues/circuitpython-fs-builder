@@ -85,11 +85,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("-v", "--verbose", help="Enable verbose output", action="store_true")
     parser.add_argument("input_dir", type=str, help="The local directory to convert to a filesystem.")
-    parser.add_argument("output_file", type=str, help="The output file where the filesystem is written.")
+    parser.add_argument("output_file", type=str, help="The output file where the filesystem is written. Default extension is [.cpy]")
     args = parser.parse_args()
 
     fat_seed_file = "./seed.bin"
-    build_fatfs(fat_seed_file, args.input_dir, args.output_file, verbose=args.verbose)
+    (base, ext) = os.path.splitext(args.output_file)
+    if ext=='' or ext=='.cpy':
+        ext = ".cpy"
+    else:
+        print(f"Please use the .cpy extension! You used '{ext}'")
+        exit(1)
+    build_fatfs(fat_seed_file, args.input_dir, base + ext, verbose=args.verbose)
 
 
 if __name__ == "__main__":
