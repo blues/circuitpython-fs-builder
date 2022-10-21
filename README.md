@@ -26,14 +26,16 @@ The virtual environment can then be activated by
 The dependency packages are installed with
 
 ```shell
-pip3 install -r requirements.txt 
+pip3 install -r requirements.txt
 ```
 
 
 ## Building a FAT filesystem file from a directory
 
+After installing the required packages, you can build a FAT filesystem by running `main.py` with two arguments - the directory containing the files to store in the filesystem, and the output file. The output file should have the extension `.cpy` for use with the Notecard and Outboard DFU.
+
 ```shell
-python3 main.py <directory> <output-file>
+python3 main.py <directory> <output-file>[.cpy]
 ```
 
 For more details
