@@ -1,6 +1,6 @@
 # CircuitPython filesystem builder
 
-The python script creates a binary file containing a FAT filesystem. 
+This python tool creates a binary file containing a FAT filesystem from a directory. 
 The filesystem created is compatible with [Adafruit CircuitPython](https://learn.adafruit.com/welcome-to-circuitpython/what-is-circuitpython?gclid=CjwKCAjwiuuRBhBvEiwAFXKaNI8QoLV-kE01hWlVvdCPmaU6fpLl7aVEPE6ZoyvobWpjv3mwjiCVkRoCrbMQAvD_BwE).
 
 
