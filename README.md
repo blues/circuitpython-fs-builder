@@ -32,7 +32,7 @@ pip3 install -r requirements.txt
 
 ## Building a FAT filesystem file from a directory
 
-After installing the required packages, you can build a FAT filesystem by running `main.py` with two arguments - the directory containing the files to store in the filesystem, and the output file. The output file should have the extension `.cpy` for use with the Notecard and Outboard DFU.
+After installing the required packages, you can build a FAT filesystem by running `main.py` with two arguments - the directory containing the files to store in the filesystem, and the output file. The output file should have the extension `.cpy` for use with [Notecard Outboard Firmware Updates](https://dev.blues.io/guides-and-tutorials/notecard-guides/notecard-outboard-firmware-update/).
 
 ```shell
 python3 main.py <directory> <output-file>[.cpy]
