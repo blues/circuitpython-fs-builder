@@ -16,6 +16,7 @@ setup(
        'console_scripts': [
          'cpy-fs = cpyfs.makefs:main',
          'cpy-fs-dir = cpyfs.tree:main',
+         'uf2conv = cpyfs.uf2conv:main'
       ],
    },
 )
