@@ -12,6 +12,7 @@ setup(
                      'pyfatfs>=1.0.5'
                      ],
    packages=['cpyfs'],
+   package_data={'cpyfs': ['seed.bin']},
    entry_points={
        'console_scripts': [
          'cpy-fs = cpyfs.makefs:main',
